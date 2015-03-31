@@ -173,3 +173,18 @@ class TestProjectManager(TestCase):
         pm.cproject = None
         assert 'world' not in user_ns
         assert w.keys() == []
+
+if __name__ == '__main__':
+        tmpdir = tempdir()
+
+        pm.clear()
+        # Force to ignore default repositories
+        pm.repositories = [tmpdir]
+        proj = pm.create('new_temp_project', projectdir=tmpdir)
+        print '0:', proj.projectdir
+        print '1:', tmpdir
+        assert proj.projectdir == tmpdir
+        assert proj.path.name == 'new_temp_project'
+
+        tmpdir.rmtree()
+
