@@ -25,6 +25,8 @@ from openalea.core.observer import AbstractListener
 from openalea.oalab.gui.control.manager import ControlManagerWidget
 from openalea.core.service.ipython import interpreter as get_interpreter
 
+from openalea.oalab.service.drag_and_drop import DragAndDrop
+
 
 class GenericWorldBrowser(QtGui.QWidget):
 
@@ -54,6 +56,9 @@ class WorldBrowser(GenericWorldBrowser, AbstractListener):
         actionClearWorld = QtGui.QAction(QtGui.QIcon(":/images/resources/plant.png"), "Clear World", self)
         actionClearWorld.triggered.connect(self.clear)
         self._actions = [["Project", "World", actionClearWorld, 0]]
+
+        self.dnd = DragAndDrop(self)
+        self.dnd.add_drop_callback('IImage', self.drop_object)
 
     def initialize(self):
         from openalea.oalab.world.world import World
@@ -103,6 +108,9 @@ class WorldBrowser(GenericWorldBrowser, AbstractListener):
             self.world.unregister_listener(self)
         self.world = world
         self.world.register_listener(self)
+
+    def drop_object(self, obj, **kwargs):
+        self.world.add(obj, **kwargs)
 
 
 class WorldModel(QtGui.QStandardItemModel):
