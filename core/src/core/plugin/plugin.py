@@ -32,6 +32,9 @@ import pkg_resources
 import site
 import sys
 
+from openalea.core.factroy import AbstractFactory
+
+
 def discover(group, name=None):
     """
     Return all Plugin objects from group.
@@ -88,7 +91,7 @@ def iter_plugins(group, name=None, debug=False):
                 else:
                     yield ep
 
-class Plugin(object):
+class Plugin(AbstractFactory):
     """ Define a Plugin from an entry point. """
 
     def __init__(self, epoint):
@@ -109,4 +112,12 @@ class Plugin(object):
     def load(self, *args, **kwds):
         return self.ep.load(*args, **kwds)
 
+    def _get_module(self):
+        return self.module_name
 
+    module = property(_get_module)
+
+    def _get_distribution(self):
+        return self.dist
+
+    distribution = property(_get_distribution)
