@@ -121,3 +121,6 @@ class Plugin(AbstractFactory):
         return self.dist
 
     distribution = property(_get_distribution)
+
+    def __call__(self, *args, **kwds):
+        return self.load(*args, **kwds)
