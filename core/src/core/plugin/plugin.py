@@ -32,7 +32,7 @@ import pkg_resources
 import site
 import sys
 
-from openalea.core.factroy import AbstractFactory
+from openalea.core.factory import AbstractFactory
 
 
 def discover(group, name=None):
