@@ -6,8 +6,8 @@ import openalea.oalab.service.qt_control as scontrol
 from openalea.core.service.interface import new_interface, interfaces, load_interfaces
 from openalea.core.control import Control
 from openalea.core.control.manager import ControlManager
-from openalea.oalab.gui.control.qcontainer import QControlContainer
-from openalea.oalab.gui.control.model_view import ControlView, ControlModel
+from openalea.oalab.control.qcontainer import QControlContainer
+from openalea.oalab.control.model_view import ControlView, ControlModel
 
 
 class CheckSizes(Ui_Form, QtGui.QWidget):
