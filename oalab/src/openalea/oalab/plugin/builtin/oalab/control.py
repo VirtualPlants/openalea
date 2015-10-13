@@ -6,7 +6,7 @@
 #
 #       File author(s): Guillaume Baty <guillaume.baty@inria.fr>
 #
-#       File contributor(s):
+#       File contributor(s): Guillaume Cerutti <guillaume.cerutti@inria.fr>
 #
 #       Distributed under the Cecill-C License.
 #       See accompanying file LICENSE.txt or copy at
@@ -26,6 +26,7 @@ from openalea.deploy.shared_data import shared_data
 import openalea.oalab
 
 from openalea.core.plugin import PluginDef
+from openalea.core.authors import gbaty, gcerutti
 
 """
 class PluginIntSpinBox(ControlWidgetSelectorPlugin):
@@ -55,11 +56,14 @@ class PluginIntSlider(ControlWidgetSelectorPlugin):
 @PluginDef
 class PluginIntWidgetSelector(ControlWidgetSelectorPlugin):
 
+    authors = [gbaty]
     controls = ['IInt']
     label = 'Integer editor'
     required = ['IInt.min', 'IInt.max']
     edit_shape = ['responsive']
-    icon_path = shared_data(openalea.oalab, 'icons/IntWidgetSelector_hline.png')
+    #icon_path = shared_data(openalea.oalab, 'icons/IntWidgetSelector_hline.png')
+    icon = shared_data(openalea.oalab, 'icons/IntWidgetSelector_hline.png')
+    tags = ['control','integer']
 
     def __call__(self):
         from openalea.oalab.control.selector import IntWidgetSelector
@@ -69,11 +73,14 @@ class PluginIntWidgetSelector(ControlWidgetSelectorPlugin):
 @PluginDef
 class PluginFloatWidgetSelector(ControlWidgetSelectorPlugin):
 
+    authors = [gbaty,gcerutti]
     controls = ['IFloat']
     label = 'Float editor'
     required = ['IFloat.min', 'IFloat.max', 'IFloat.step']
     edit_shape = ['responsive']
-    icon_path = shared_data(openalea.oalab, 'icons/IntWidgetSelector_hline.png')
+    #icon_path = shared_data(openalea.oalab, 'icons/IntWidgetSelector_hline.png')
+    icon = shared_data(openalea.oalab, 'icons/IntWidgetSelector_hline.png')
+    tags = ['control','float']
 
     def __call__(self):
         from openalea.oalab.control.selector import FloatWidgetSelector
@@ -83,10 +90,13 @@ class PluginFloatWidgetSelector(ControlWidgetSelectorPlugin):
 @PluginDef
 class PluginIntRangeWidgetSelector(ControlWidgetSelectorPlugin):
 
+
+    authors = [gcerutti]
     controls = ['IIntRange']
-    label = 'Int Range editor'
+    label = 'Integer Range editor'
     required = ['IIntRange.min', 'IIntRange.max']
     edit_shape = ['responsive']
+    tags = ['control','integer range']
 
     def __call__(self):
         from openalea.oalab.control.selector import IntRangeWidgetSelector
@@ -96,10 +106,12 @@ class PluginIntRangeWidgetSelector(ControlWidgetSelectorPlugin):
 @PluginDef
 class PluginColormapWidgetSelector(ControlWidgetSelectorPlugin):
 
+    authors = [gcerutti]
     controls = ['IColormap']
     label = 'Colormap editor'
     required = []
     edit_shape = ['responsive']
+    tags = ['control','colormap','selector']
     paint = True
 
     def __call__(self):
@@ -110,8 +122,10 @@ class PluginColormapWidgetSelector(ControlWidgetSelectorPlugin):
 @PluginDef
 class PluginBoolWidgetSelector(ControlWidgetSelectorPlugin):
 
+    authors = [gbaty]
     controls = ['IBool']
     edit_shape = ['responsive']
+    tags = ['control','boolean']
 
     def __call__(self):
         from openalea.oalab.widget.control import BoolCheckBox
@@ -121,8 +135,10 @@ class PluginBoolWidgetSelector(ControlWidgetSelectorPlugin):
 @PluginDef
 class PluginStringWidgetSelector(ControlWidgetSelectorPlugin):
 
+    authors = [gbaty]
     controls = ['IStr']
     edit_shape = ['hline', 'large', 'small']
+    tags = ['control','string']
 
     def __call__(self):
         from openalea.oalab.widget.control import StrLineEdit

@@ -21,6 +21,8 @@
 from openalea.oalab.plugin.oalab.control import ControlWidgetSelectorPlugin
 from openalea.core.plugin import PluginDef
 
+from openalea.core.authors import gbaty
+
 ################################################################################
 # Dynamic generation of Qt control widgets from openalea node widgets
 ################################################################################
@@ -59,7 +61,10 @@ def new_plugin(widget_class, interface, shape=None):
 
     name = 'PluginOpenAlea%s' % interface.__name__
     klass = type(name, (ControlWidgetSelectorPlugin,), dict(__call__=__call__))
+
     klass.controls = [interface.__name__]
+    klass.authors = [gbaty]
+    klass.tags = ['control', interface.__name__[1:]]
     klass.name = interface.__name__[1:] + 'Widget'
     klass.edit_shape = shape
     klass.implement = 'IWidgetSelector'
