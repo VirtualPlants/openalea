@@ -1,5 +1,62 @@
 import inspect
-from openalea.core.service.plugin import plugins, plugin, register_plugin
+#from openalea.core.service.plugin import plugins, plugin, register_plugin
+
+PLUGINS = dict()
+
+def plugins(group, tags, criteria, **kwargs):
+    if not group in PLUGINS:
+        return []
+    else:
+        return [plg for plg in PLUGINS[group] if all(tag in plg.tags for tag in tags) and all(hasattr(plg, criterion) and getattr(plg, criterion) == criteria[criterion] for criterion in criteria)]
+
+def plugin(group, name):
+    try:
+        for plugin_class in PLUGINS[group]:
+            if plugin_class.identifier == name:
+                return plugin_class
+        raise NotImplementedError()
+    except:
+        raise NotImplementedError()
+
+def register_plugin(group, plugin_class):
+    #plugin_class.identifier = plugin_class.__module__ + ':' + plugin_class.__name__
+
+    #class PluginMetaclass(type):
+
+    #    @property
+    #    def implementation(cls):
+    #        exec 'from '+ cls.modulename + ' import ' + cls.objectname in locals()
+    #	    return locals()[cls.objectname]
+
+    #class PluginClass(plugin_class):
+
+    #    __metaclass__ = PluginMetaclass
+
+    #plugin_class = PluginClass
+
+    #if not group in PLUGINS:
+    #    PLUGINS[group] = list()
+
+    if not hasattr(plugin_class, 'identifier'):
+        def get_identifier(self):
+            return self.__class__.__module__ + ':' + self.__class__.__name__
+        plugin_class.identifier = property(get_identifier, doc = """Identifier of the plugin""")
+
+    if not hasattr(plugin_class, 'implementation'):
+        if not hasattr(plugin_class, 'modulename'):
+            raise AttributeError('\'plugin_class\' has no attribute \'modulename\'')
+        elif not hasattr(plugin_class, 'objectname'):
+            raise AttributeError('\'plugin_class\' has no attribute \'objectname\'')
+        else:
+            def get_implementation(self):
+                exec 'from '+ self.modulename + ' import ' + self.objectname in locals()
+                return locals()[self.objectname]
+            plugin_class.implementation = property(get_implementation, doc = """Implementation of the plugin""")
+    if not group in PLUGINS:
+        PLUGINS[group] = []
+    plugin_instance = plugin_class()
+    PLUGINS[group].append(plugin_instance)
+    return plugin_instance
 
 class PluginFunctor(object):
 
