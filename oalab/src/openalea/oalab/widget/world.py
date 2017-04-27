@@ -148,7 +148,6 @@ class WorldObjectComboBox(QtGui.QComboBox):
 
     def mousePressEvent(self, e):
         if e.button() == QtCore.Qt.LeftButton:
-            print "Clicked! : ",e.pos()
             self.dragStartPosition = e.pos()
 
     def mouseReleaseEvent(self, e):
@@ -159,12 +158,10 @@ class WorldObjectComboBox(QtGui.QComboBox):
             return
 
         if (e.pos() - self.dragStartPosition).manhattanLength() > 10:
-            print "Init drag! : openalealab/world_object"
             drag = QtGui.QDrag(self)
 
             object_name = self.currentText()
             data = self.mimeData(object_name)
-            print data.data('openalealab/world_object')
             drag.setMimeData(data)
 
             drop_action = drag.exec_()

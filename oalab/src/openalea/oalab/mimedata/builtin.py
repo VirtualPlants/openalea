@@ -203,6 +203,7 @@ class BuiltinWorldObjectCodec(QMimeCodec):
         if mimetype_in == 'openalealab/world_object':
             world_object = decode_world_object(raw_data, mimetype_in, mimetype_out)
             kwds = world_kwargs(world_object)
+            kwds['name'] = world_object.name
 
             if mimetype_out == "openalealab/world_object":
                 return world_object, kwds

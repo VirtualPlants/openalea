@@ -38,6 +38,10 @@ class GenericFileBrowser(QtGui.QWidget):
         self.model.setRootPath(self._home_dir)
         self.tree.setRootIndex(self.model.index(self._home_dir))
 
+        self.tree.setDragEnabled(True)
+
+        self._selected_path = None
+
         layout = QtGui.QGridLayout(self)
         layout.addWidget(self.tree)
 
@@ -46,6 +50,8 @@ class GenericFileBrowser(QtGui.QWidget):
 
     def _create_connections(self):
         self.tree.doubleClicked.connect(self._on_index_clicked)
+        self.tree.pressed.connect(self._on_index_pressed)
+
 
     def _create_actions(self):
         self._action_go_to_parent = QtGui.QAction(qicon('oxygen_go-up.png'), 'Parent dir', self)
@@ -68,6 +74,11 @@ class GenericFileBrowser(QtGui.QWidget):
         filename = self.model.filePath(index)
         self.pathSelected.emit(Path(filename))
 
+    def _on_index_pressed(self, index):
+        filename = self.model.filePath(index)
+        self._selected_path = filename
+
+
     def set_properties(self, properties):
         columns = properties.get('columns', [0])
         for icol in range(self.model.columnCount()):
@@ -76,6 +87,38 @@ class GenericFileBrowser(QtGui.QWidget):
     def properties(self):
         columns = [i for i in range(self.model.columnCount()) if not self.tree.isColumnHidden(i)]
         return dict(columns=columns)
+
+    # Drag and drop
+
+    def startDrag(self, supportedActions):
+        from openalea.core.service.mimetype import encode
+        
+        filename = self._selected_path
+        uri = filename
+
+        mimetype, mimedata = encode(uri, mimetype='text/uri-list')
+        qmime_data = QtCore.QMimeData()
+        qmime_data.setData(mimetype, mimedata)
+        qmime_data.setText(filename)
+        drag = QtGui.QDrag(self)
+        drag.setMimeData(qmime_data)
+        drag.start()
+
+    def dragEnterEvent(self, event):
+        if event.mimeData().hasFormat("text/uri-list"):
+            event.accept()
+        else:
+            event.ignore()
+
+    def dragMoveEvent(self, event):
+        if event.mimeData().hasFormat("text/uri-list"):
+            event.setDropAction(QtCore.Qt.CopyAction)
+            event.accept()
+        else:
+            event.ignore()
+
+    def dropEvent(self, event):
+        event.ignore()
 
 
 class FileBrowser(GenericFileBrowser):
